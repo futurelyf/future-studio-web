@@ -12,15 +12,24 @@
   --glow-1: rgba(76, 110, 245, 0.14);
   --glow-2: rgba(204, 85, 0, 0.1);
   --cta-hover: rgba(255, 255, 255, 0.12);
-  --topleft-bg: rgba(59, 130, 246, 0.18);
-  --topleft-fg: #7ab3ff;
+  --topleft-bg: rgba(96, 165, 250, 0.2); /* sky blue bg */
+  --topleft-fg: #60a5fa; /* sky blue text */
   --topright-bg: rgba(120, 190, 50, 0.18);
   --topright-fg: #a6e56a;
-  --bottomleft-bg: rgba(204, 85, 0, 0.2);
-  --bottomleft-fg: #ff9a52;
+  --bottomleft-bg: rgba(251, 146, 60, 0.22); /* was rgba(204, 85, 0, 0.20) */
+  --bottomleft-fg: #ffb680; /* was #ff9a52 */
   --bottomright-bg: rgba(138, 90, 48, 0.22);
   --bottomright-fg: #d5a374;
   --radius: 24px;
+
+  /* ---- Keyword chip tints (DARK) — silver · gold · sky blue ---- */
+  --chip-name-tint: 203, 213, 225; /* silver      */
+  --chip-role-tint: 251, 191, 36; /* warm gold      */
+  --chip-place-tint: 125, 211, 252; /* sky blue       */
+
+  --chip-glass-bg: rgba(255, 255, 255, 0.04);
+  --chip-glass-hi: rgba(255, 255, 255, 0.09);
+  --chip-glass-line: rgba(255, 255, 255, 0.1);
 }
 [data-theme="light"] {
   --bg: #f7f7f8;
@@ -33,14 +42,23 @@
   --glow-1: rgba(59, 130, 246, 0.22);
   --glow-2: rgba(204, 85, 0, 0.16);
   --cta-hover: rgba(0, 0, 0, 0.25);
-  --topleft-bg: #cfe4ff;
-  --topleft-fg: #3b82f6;
+  --topleft-bg: #dbeafe; /* light sky bg */
+  --topleft-fg: #3e85e9; /* deep sky text */
   --topright-bg: #dcf2c4;
   --topright-fg: #4e9d1f;
-  --bottomleft-bg: #ffd4b8;
-  --bottomleft-fg: #cc5500;
+  --bottomleft-bg: #ffe4cc; /* was #ffd4b8 */
+  --bottomleft-fg: #e58248; /* was #cc5500 */
   --bottomright-bg: #ecdfd1;
   --bottomright-fg: #8a5a30;
+
+  /* ---- Keyword chip tints (LIGHT) — deeper, more saturated ---- */
+  --chip-name-tint: 71, 85, 105; /* silver      */
+  --chip-role-tint: 180, 120, 10; /* rich gold      */
+  --chip-place-tint: 14, 165, 233; /* deep sky blue  */
+
+  --chip-glass-bg: rgba(255, 255, 255, 0.55);
+  --chip-glass-hi: rgba(255, 255, 255, 0.85);
+  --chip-glass-line: rgba(15, 17, 21, 0.08);
 }
 
 * {
@@ -239,14 +257,15 @@ body::before {
 .hero__greeting {
   color: var(--muted);
   font-size: 1.4rem;
-  margin-bottom: 6px;
+  font-weight: 600; /* ← add this line */
+  margin-bottom: 35px;
 }
 .hero__title {
-  font-size: clamp(2.2rem, 6.2vw, 4.4rem);
-  font-weight: 800;
-  line-height: 1.2;
+  font-size: clamp(1.4rem, 3vw, 2rem); /* ↓ was clamp(1.8rem, 4.5vw, 3rem) */
+  font-weight: 700;
+  line-height: 2;
   letter-spacing: -0.02em;
-  margin-bottom: 20px;
+  margin-bottom: 45px;
   color: var(--ink);
 }
 .hero__desc {
@@ -255,6 +274,95 @@ body::before {
   color: var(--muted);
   font-size: 1.1rem;
   line-height: 1.6;
+}
+
+/* ============================================================
+   ✨ KEYWORD CHIPS — Editorial Glass
+   Yifan Liang · Financial Engineer · Hong Kong
+   ============================================================ */
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em; /* ↑ more space icon↔text */
+  padding: 0.32em 0.95em 0.32em 1.1em; /* ↑ looser padding */
+  border-radius: 0.75em; /* ↑ softer corners */
+
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+  vertical-align: middle;
+
+  color: rgb(var(--chip-tint));
+  background: linear-gradient(
+    180deg,
+    var(--chip-glass-hi) 0%,
+    var(--chip-glass-bg) 100%
+  );
+  border: 1px solid var(--chip-glass-line);
+  box-shadow:
+    0 4px 14px -6px rgba(var(--chip-tint), 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  transition:
+    transform 0.28s ease,
+    box-shadow 0.28s ease,
+    border-color 0.28s ease;
+}
+.chip::before {
+  content: "";
+  position: absolute;
+  left: 0.42em; /* ↑ moved to match new padding */
+  top: 22%;
+  bottom: 22%;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(
+    180deg,
+    rgba(var(--chip-tint), 0.9),
+    rgba(var(--chip-tint), 0.2)
+  );
+}
+.chip:hover {
+  transform: translateY(-2px);
+  border-color: rgba(var(--chip-tint), 0.4);
+  box-shadow:
+    0 10px 24px -8px rgba(var(--chip-tint), 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.chip__icon {
+  width: 1em;
+  height: 1em;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 1px 2px rgba(var(--chip-tint), 0.35));
+}
+.chip__text {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* ✅ Chips inside the huge title get a slightly larger fixed size */
+.hero__title .chip {
+  font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+}
+
+/* Per-chip color identities */
+.chip--name {
+  --chip-tint: var(--chip-name-tint);
+}
+.chip--role {
+  --chip-tint: var(--chip-role-tint);
+}
+.chip--place {
+  --chip-tint: var(--chip-place-tint);
 }
 
 /* ===== CTA BUTTON (shared: main page + 404) ===== */
@@ -474,7 +582,7 @@ body::before {
 }
 .contact__title {
   font-size: clamp(2rem, 5vw, 3.2rem);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.02em;
   margin-bottom: 14px;
   color: var(--ink);
@@ -482,7 +590,45 @@ body::before {
 .contact__desc {
   color: var(--muted);
   font-size: 1.1rem;
-  line-height: 1.6;
+  line-height: 1.75;
+  max-width: 38rem;
+  margin: 0 auto;
+}
+/* ===== WAVING HAND on CONTACT PAGE ===== */
+.contact__wave {
+  display: inline-block;
+  font-size: 0.9em;
+  line-height: 1;
+  margin-left: 0.15em;
+  transform-origin: 70% 70%; /* pivots from the wrist */
+  animation: wave 2.5s ease-in-out infinite;
+}
+@keyframes wave {
+  0%,
+  60%,
+  100% {
+    transform: rotate(0deg);
+  }
+  10% {
+    transform: rotate(14deg);
+  }
+  20% {
+    transform: rotate(-8deg);
+  }
+  30% {
+    transform: rotate(14deg);
+  }
+  40% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contact__wave {
+    animation: none;
+  }
 }
 .contact__frame {
   background: var(--card);
