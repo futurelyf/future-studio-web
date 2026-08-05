@@ -597,38 +597,19 @@ body::before {
 /* ===== WAVING HAND on CONTACT PAGE ===== */
 .contact__wave {
   display: inline-block;
-  font-size: 0.9em;
-  line-height: 1;
-  margin-left: 0.15em;
-  transform-origin: 70% 70%; /* pivots from the wrist */
-  animation: wave 2.5s ease-in-out infinite;
+  width: 1em; /* scales with parent font size */
+  height: 1em;
+  vertical-align: -0.15em; /* aligns nicely with text baseline */
+  margin-left: 0.2em;
+  /* No CSS animation needed — the .png is self-animating */
 }
-@keyframes wave {
-  0%,
-  60%,
-  100% {
-    transform: rotate(0deg);
-  }
-  10% {
-    transform: rotate(14deg);
-  }
-  20% {
-    transform: rotate(-8deg);
-  }
-  30% {
-    transform: rotate(14deg);
-  }
-  40% {
-    transform: rotate(-4deg);
-  }
-  50% {
-    transform: rotate(10deg);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .contact__wave {
-    animation: none;
-  }
+/* ===== KNOCKED-OUT FACE on 404 PAGE ===== */
+.notfound__emoji {
+  display: inline-block;
+  width: 1.1em;
+  height: 1.1em;
+  vertical-align: -0.2em;
+  margin-left: 0.3em;
 }
 .contact__frame {
   background: var(--card);
