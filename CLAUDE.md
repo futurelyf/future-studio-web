@@ -62,12 +62,12 @@ The site is structured so that URLs never carry a `.html` suffix:
 
 - `/` → served from `index.html` at repo root.
 - `/contact` → served from `contact/index.html`.
-- Anything else → `error_page 404 /not-found.html;` returns the 404 page (the browser address bar keeps the original bad URL).
+- Anything else → `error_page 404 =302 /not-found;` returns the 404 page (the browser address bar changes to `/not-found`).
 
 The full, ready-to-deploy server block lives in [openresty.conf](openresty.conf) at the repo root — copy its `server { ... }` into your OpenResty config and replace the placeholder `root` path with your real value. SSL is handled by 1Panel upstream, so this block only listens on plain HTTP (port 80). The key pieces it implements:
 
 1. **`try_files $uri $uri/ $uri.html =404;`** — maps clean URLs to the `folder/index.html` layout, with a `.html` fallback for legacy links during a transition window. Drop the `$uri.html` clause once no external `.html` links remain.
-2. **`error_page 404 /not-found.html;`** — internal redirect, so the browser bar keeps the original bad URL.
+2. **`error_page 404 =302 /not-found;`** — external redirect to the canonical 404 URL. The browser bar changes to `/not-found` (so users see the friendly route, not the bad URL they typed). The `try_files` chain then serves `not-found.html` for `/not-found`.
 
 The OpenResty config is the source of truth for routing; this section is just a map of _why_ each line exists.
 
