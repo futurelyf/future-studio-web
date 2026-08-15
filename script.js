@@ -1,24 +1,24 @@
 // ===== THEME TOGGLE (dark by default, remembers choice) =====
-const toggleBtn = document.getElementById('theme-toggle');
-toggleBtn?.addEventListener('click', () => {
+const toggleBtn = document.getElementById("theme-toggle");
+toggleBtn?.addEventListener("click", () => {
   const isLight =
-    document.documentElement.getAttribute('data-theme') === 'light';
+    document.documentElement.getAttribute("data-theme") === "light";
   if (isLight) {
-    document.documentElement.removeAttribute('data-theme');
-    localStorage.setItem('theme', 'dark');
+    document.documentElement.removeAttribute("data-theme");
+    localStorage.setItem("theme", "dark");
   } else {
-    document.documentElement.setAttribute('data-theme', 'light');
-    localStorage.setItem('theme', 'light');
+    document.documentElement.setAttribute("data-theme", "light");
+    localStorage.setItem("theme", "light");
   }
 });
 
 // ===== Parallax drift on the floating tags =====
-const tags = document.querySelectorAll('.tag');
+const tags = document.querySelectorAll(".tag");
 const canHover = window.matchMedia(
-  '(hover: hover) and (pointer: fine)',
+  "(hover: hover) and (pointer: fine)",
 ).matches;
 if (canHover) {
-  window.addEventListener('mousemove', (e) => {
+  window.addEventListener("mousemove", (e) => {
     const x = e.clientX / window.innerWidth - 0.5;
     const y = e.clientY / window.innerHeight - 0.5;
     tags.forEach((tag, i) => {
@@ -30,20 +30,20 @@ if (canHover) {
 }
 
 // ===== Auto-updating copyright year =====
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   const currentYear = new Date().getFullYear(); // → 2026
-  document.querySelectorAll('.year').forEach((el) => {
+  document.querySelectorAll(".year").forEach((el) => {
     el.textContent = currentYear;
   });
 });
 
 // ===== Smooth scroll for in-page anchor links (only href="#...") =====
 document.querySelectorAll('a[href^="#"]').forEach((a) => {
-  a.addEventListener('click', (e) => {
-    const t = document.querySelector(a.getAttribute('href'));
+  a.addEventListener("click", (e) => {
+    const t = document.querySelector(a.getAttribute("href"));
     if (t) {
       e.preventDefault();
-      t.scrollIntoView({ behavior: 'smooth' });
+      t.scrollIntoView({ behavior: "smooth" });
     }
   });
 });

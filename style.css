@@ -31,7 +31,7 @@
   --chip-glass-hi: rgba(255, 255, 255, 0.09);
   --chip-glass-line: rgba(255, 255, 255, 0.1);
 }
-[data-theme='light'] {
+[data-theme="light"] {
   --bg: #eff1f4;
   --surface: #ffffff;
   --ink: #0f1115;
@@ -72,7 +72,7 @@ body {
 }
 body {
   font-family:
-    'Inter',
+    "Inter",
     system-ui,
     -apple-system,
     sans-serif;
@@ -84,7 +84,7 @@ body {
     color 0.35s ease;
 }
 body::before {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
   z-index: 0;
@@ -168,7 +168,7 @@ body::before {
   transition: color 0.25s;
 }
 .navbar__links a::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   bottom: 0;
@@ -213,10 +213,10 @@ body::before {
 .icon--moon {
   display: none;
 }
-[data-theme='light'] .icon--sun {
+[data-theme="light"] .icon--sun {
   display: none;
 }
-[data-theme='light'] .icon--moon {
+[data-theme="light"] .icon--moon {
   display: block;
 }
 
@@ -313,7 +313,7 @@ body::before {
     border-color 0.28s ease;
 }
 .chip::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0.42em; /* ↑ moved to match new padding */
   top: 22%;
@@ -416,7 +416,7 @@ body::before {
     color 0.35s ease;
 }
 .tag::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 14px;
   top: 50%;
