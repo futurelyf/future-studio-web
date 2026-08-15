@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Page Not Found</title>
-    <link rel="icon" type="image/svg+xml" href="Tree.svg" />
+    <link rel="icon" type="image/svg+xml" href="pic/Tree.svg" />
     <link rel="stylesheet" href="style.css" />
     <script>
       (function () {
-        if (localStorage.getItem("theme") === "light") {
-          document.documentElement.setAttribute("data-theme", "light");
+        if (localStorage.getItem('theme') === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
         }
       })();
     </script>
@@ -17,12 +17,16 @@
   <body>
     <header class="navbar">
       <div class="navbar__inner">
-        <a href="/index.html" class="brand">
-          <img src="Tree.svg" alt="Future Studio logo" class="brand__logo" />
+        <a href="/" class="brand">
+          <img
+            src="pic/Tree.svg"
+            alt="Future Studio logo"
+            class="brand__logo"
+          />
           <span class="brand__name">Future Studio</span>
         </a>
         <nav class="navbar__links">
-          <a href="/index.html">Home</a>
+          <a href="/">Home</a>
           <button
             id="theme-toggle"
             class="theme-toggle"
@@ -71,7 +75,7 @@
           Page not found
           <img
             class="notfound__emoji"
-            src="knocked-out_face_animated.png"
+            src="pic/knocked-out_face_animated.png"
             alt=""
             aria-hidden="true"
           />
@@ -79,7 +83,7 @@
         <p class="notfound__desc">
           Sorry, the page you're looking for doesn't exist or may have moved.
         </p>
-        <a href="/index.html" class="cta">
+        <a href="/" class="cta">
           Go to home page
           <span class="cta__icon">
             <svg
@@ -103,8 +107,12 @@
 
     <footer class="site-footer">
       <div class="footer__box">
-        <a href="/index.html" class="brand">
-          <img src="Tree.svg" alt="Future Studio logo" class="brand__logo" />
+        <a href="/" class="brand">
+          <img
+            src="pic/Tree.svg"
+            alt="Future Studio logo"
+            class="brand__logo"
+          />
           <span class="brand__name">Future Studio</span>
         </a>
         <div class="footer__text">

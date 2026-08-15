@@ -3,14 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- ✅ FIX #2: title simplified to just "Contact" -->
     <title>Contact</title>
-    <link rel="icon" type="image/svg+xml" href="Tree.svg" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/svg+xml" href="../pic/Tree.svg" />
+    <link rel="stylesheet" href="../style.css" />
     <script>
       (function () {
-        if (localStorage.getItem("theme") === "light") {
-          document.documentElement.setAttribute("data-theme", "light");
+        if (localStorage.getItem('theme') === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
         }
       })();
     </script>
@@ -18,13 +17,17 @@
   <body>
     <header class="navbar">
       <div class="navbar__inner">
-        <a href="/index.html" class="brand">
-          <img src="Tree.svg" alt="Future Studio logo" class="brand__logo" />
+        <a href="/" class="brand">
+          <img
+            src="../pic/Tree.svg"
+            alt="Future Studio logo"
+            class="brand__logo"
+          />
           <span class="brand__name">Future Studio</span>
         </a>
         <nav class="navbar__links">
-          <a href="/index.html">Home</a>
-          <a href="/contact.html">Contact</a>
+          <a href="/">Home</a>
+          <a href="/contact">Contact</a>
           <button
             id="theme-toggle"
             class="theme-toggle"
@@ -73,7 +76,7 @@
           Let's connect
           <img
             class="contact__wave"
-            src="waving_hand_animated_medium-light.png"
+            src="../pic/waving_hand_animated_medium-light.png"
             alt=""
             aria-hidden="true"
           />
@@ -97,8 +100,12 @@
 
     <footer class="site-footer">
       <div class="footer__box">
-        <a href="/index.html" class="brand">
-          <img src="Tree.svg" alt="Future Studio logo" class="brand__logo" />
+        <a href="/" class="brand">
+          <img
+            src="../pic/Tree.svg"
+            alt="Future Studio logo"
+            class="brand__logo"
+          />
           <span class="brand__name">Future Studio</span>
         </a>
         <div class="footer__text">
@@ -109,6 +116,6 @@
       </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="../script.js"></script>
   </body>
 </html>
