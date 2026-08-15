@@ -66,9 +66,8 @@ The site is structured so that URLs never carry a `.html` suffix:
 
 The full, ready-to-deploy server block lives in [openresty.conf](openresty.conf) at the repo root — copy its `server { ... }` into your OpenResty config and replace the placeholder `root` path with your real value. SSL is handled by 1Panel upstream, so this block only listens on plain HTTP (port 80). The key pieces it implements:
 
-1. **`rewrite ^/(.+)/$ /$1 permanent;`** — strips trailing slashes (so `/contact/` 301-redirects to `/contact`). Must come before the `location` block.
-2. **`try_files $uri $uri/ $uri.html =404;`** — maps clean URLs to the `folder/index.html` layout, with a `.html` fallback for legacy links during a transition window. Drop the `$uri.html` clause once no external `.html` links remain.
-3. **`error_page 404 /not-found.html;`** — internal redirect, so the browser bar keeps the original bad URL.
+1. **`try_files $uri $uri/ $uri.html =404;`** — maps clean URLs to the `folder/index.html` layout, with a `.html` fallback for legacy links during a transition window. Drop the `$uri.html` clause once no external `.html` links remain.
+2. **`error_page 404 /not-found.html;`** — internal redirect, so the browser bar keeps the original bad URL.
 
 The OpenResty config is the source of truth for routing; this section is just a map of _why_ each line exists.
 
