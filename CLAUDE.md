@@ -19,6 +19,24 @@ Because there's no bundler, edits to `style.css`, `script.js`, or any `.html` fi
 
 ## Architecture
 
+### Directory tree
+
+```text
+future-studio-web/
+├── index.html            # Home page (hero)
+├── not-found.html        # 404 page
+├── script.js             # Shared JS (all pages)
+├── style.css             # Shared stylesheet (all pages)
+├── openresty.conf        # nginx server block (paste into OpenResty)
+├── pic/
+│   ├── Tree.svg                     # Logo + favicon
+│   ├── Headshot.jpeg                # Avatar on home
+│   ├── knocked-out_face_animated.png  # 404 emoji
+│   └── waving_hand_animated_medium-light.png  # Contact wave
+└── contact/
+    └── index.html        # Contact page (iframe to external form)
+```
+
 Three shared assets are referenced by every page via **relative paths** (this is non-obvious and matters when adding pages):
 
 - `style.css` — single stylesheet for the whole site, imported from the page's own directory. Pages in subfolders (e.g. `contact/index.html`) reference it as `../style.css`.
