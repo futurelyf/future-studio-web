@@ -43,6 +43,10 @@ Three shared assets are referenced by every page via **relative paths** (this is
 - `script.js` — single script for the whole site, referenced the same way (`../script.js` from subfolders).
 - `pic/Tree.svg` — favicon, referenced as `pic/Tree.svg` at root and `../pic/` from subfolders.
 
+The `<header class="navbar">` and `<footer class="site-footer">` markup is copy-pasted across every page (no templating). When editing nav or footer content, apply the change to every `.html` file — root pages use `pic/…` relative paths, pages in subfolders use `../pic/…`.
+
+The floating role tags on the home page carry a `data-rot` attribute (e.g. `data-rot="-8"`) in the HTML; `script.js` reads it to apply the rotation together with the parallax drift. New tags need both the `data-rot` attribute and a `data-*` depth offset to work together.
+
 ### Pages
 
 | Route | File | Notes |
@@ -55,7 +59,7 @@ Three shared assets are referenced by every page via **relative paths** (this is
 
 Dark by default. Light theme is applied by setting `data-theme="light"` on `<html>`. The theme is persisted in `localStorage` under `theme` ("dark" or "light"). Every page has a small inline `<script>` in `<head>` that restores the theme **before** the body renders (avoids a flash of the wrong theme). All theme colors are CSS custom properties on `:root` vs `[data-theme="light"]` — never hardcode theme colors outside these blocks.
 
-`script.js` handles: theme toggle button, mouse-parallax drift on the `.tag` elements (desktop hover devices only), auto-updating copyright year, and smooth-scroll for `#` anchor links.
+`script.js` handles: theme toggle button, mouse-parallax drift on the `.tag` elements (desktop hover devices only), auto-updating the `.year` elements to the current year, and smooth-scroll for `#` anchor links. It uses optional chaining (`toggleBtn?.`) and `querySelectorAll`, so it runs safely on every page even where a given element (e.g. the theme button) is missing.
 
 ### Server (OpenResty)
 
