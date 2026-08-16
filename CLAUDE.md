@@ -2,82 +2,57 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project
+## Project Overview
 
-Static personal site for **Future Studio** (Yifan Liang, Financial Engineer, Hong Kong). Pure HTML/CSS/JS — no build step, no package manager, no framework, no linter, no tests. Pages are served as-is from the repo root.
+Static personal portfolio website for **Future Studio** (personal site of Yifan Liang). Vanilla HTML/CSS/JS — no build tooling, no framework, no package manager, no dependencies. Served by OpenResty/nginx on `futurestudio.dev`.
 
-- **Repo / deployment**: `https://github.com/futurelyf/future-studio-web` (branch: `main`).
-- **Contact form**: the contact page embeds a third-party iframe hosted at `form.futurestudio.dev` — the form itself is not part of this repo. Don't try to "fix" or "improve" the form by editing the iframe `src`; the receiver lives on a different host.
+## Development
 
-## Pages
+There is no build/lint/test step. Open `index.html` in a browser, or run a simple static server from the repo root to test routes behaved as OpenResty does:
 
-All three pages share the same `<header>` (`.navbar` + brand + theme toggle) and `<footer>` (`.site-footer`), and both link the same `style.css` and `script.js`. When editing shared chrome, change it in every file.
+```bash
+# in future-studio-web/
+python3 -m http.server 8080
+```
 
-- [index.html](index.html) — Hero landing page with floating role tags, avatar, and "Let's connect" CTA. The only page with `.tag` parallax elements. Lives at the repo root.
-- [contact/index.html](contact/index.html) — Wraps the third-party contact form iframe in `.contact__frame` (glass card). Lives one level deeper so `web.com/contact` resolves without a `.html` suffix; all relative asset paths in this file are prefixed with `../`.
-- [not-found.html](not-found.html) — Error page. The `Contact` link is intentionally absent from the navbar here (only `Home` is shown). Served by the server when no route matches; the URL bar keeps the original bad URL.
+Because there's no bundler, edits to `style.css`, `script.js`, or any `.html` file take effect on reload. Clear the browser cache after editing images in `pic/` (see "Mac Cache" commit).
 
 ## Architecture
 
-### Theme system (the only piece of non-obvious behavior)
+Three shared assets are referenced by every page via **relative paths** (this is non-obvious and matters when adding pages):
 
-The site ships dark by default and lets the user toggle to light. To avoid a flash of wrong theme on load, each page's `<head>` contains a small **inline blocking script** that reads `localStorage.getItem("theme")` and sets `data-theme="light"` on `<html>` _before_ the stylesheet parses. This script is duplicated verbatim in all three pages — keep them in sync.
+- `style.css` — single stylesheet for the whole site, imported from the page's own directory. Pages in subfolders (e.g. `contact/index.html`) reference it as `../style.css`.
+- `script.js` — single script for the whole site, referenced the same way (`../script.js` from subfolders).
+- `pic/Tree.svg` — favicon, referenced as `pic/Tree.svg` at root and `../pic/` from subfolders.
 
-- Dark is `:root`; light is `[data-theme="light"]`. All colors live as CSS custom properties in [style.css:4-62](style.css#L4-L62) — do not hardcode colors in component rules.
-- Per-chip tints (`.chip--name`, `.chip--role`, `.chip--place`) use a `var(--chip-tint)` indirection so the glass effect works in both themes; the actual `R, G, B` triplets differ per theme.
-- Toggle logic + persistence lives in [script.js:1-13](script.js#L1-L13). The button uses `?.` optional chaining, so it silently no-ops on pages that omit `#theme-toggle` (currently none, but keep this if you split the toggle out).
+### Pages
 
-### Tag parallax
+| Route | File | Notes |
+|-------|------|-------|
+| `/` | `index.html` | Hero with floating role tags + parallax |
+| `/contact` | `contact/index.html` | Embeds external contact form iframe |
+| 404 | `not-found.html` | Served at `/not-found`, not `404.html` |
 
-Only [index.html](index.html) has `.tag` elements. The mousemove handler in [script.js:16-30](script.js#L16-L30) is gated on `(hover: hover) and (pointer: fine)` so it never runs on touch devices. Each tag's resting rotation is stored in `data-rot` (degrees, signed) and is _added_ to the per-frame translate — keep the sign convention consistent when adding new tags.
+### Theme system
 
-### Other JS behaviors (script.js)
+Dark by default. Light theme is applied by setting `data-theme="light"` on `<html>`. The theme is persisted in `localStorage` under `theme` ("dark" or "light"). Every page has a small inline `<script>` in `<head>` that restores the theme **before** the body renders (avoids a flash of the wrong theme). All theme colors are CSS custom properties on `:root` vs `[data-theme="light"]` — never hardcode theme colors outside these blocks.
 
-- **Copyright year** ([script.js:33-38](script.js#L33-L38)): writes `new Date().getFullYear()` into every `.year` element on `DOMContentLoaded`. The placeholder is `<span class="year"></span>` in the footer of each page.
-- **Smooth in-page anchors** ([script.js:41-49](script.js#L41-L49)): only matches `a[href^="#"]`. External links (e.g. `/contact`) are left alone. The current site has no in-page anchors, so this is dormant.
+`script.js` handles: theme toggle button, mouse-parallax drift on the `.tag` elements (desktop hover devices only), auto-updating copyright year, and smooth-scroll for `#` anchor links.
 
-### Styling conventions
+### Server (OpenResty)
 
-- BEM-ish naming: block (`navbar`), element (`navbar__inner`), modifier (`chip--name`). Stick to it.
-- Glass surfaces (navbar, footer box, contact frame) all use the same recipe: `background: var(--card); backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: var(--radius);` — add new glass surfaces by reusing this, not by inventing a new look.
-- Three keyframe animations: `float` (gentle bob, used by avatar and tags), `dropIn` (navbar), `rise` (page content). All defined at [style.css:713-741](style.css#L713-L741).
-- Responsive breakpoints: `640px` (mobile→tablet), `1025px` (tablet→desktop), `1400px` (wide desktop), plus a `max-height: 560px` short-viewport tweak for tag positions. Hero/contact/404 each declare their own padding/sizing at the `640px` breakpoint — check all three sections if changing a breakpoint.
+`openresty.conf` is a `server {}` block meant to be pasted into `/usr/local/openresty/nginx/conf/conf.d/` on the host. Key non-obvious behaviors:
 
-## Common operations
+- Listens on plain HTTP :80; TLS is terminated upstream by **1Panel**, which reverse-proxies to this port.
+- `root` points at `/opt/1panel/1panel/www/sites/futurestudio.dev/index` (the repo's deploy location).
+- `try_files $uri $uri.html $uri/index.html @notfound` resolves extensionless routes to `.html` files — this is why `/contact` maps to `contact/index.html`.
+- Trailing slashes are 301-redirected off (to prevent `/contact/` vs `/contact` doubling). The redirect guard at the top skips root `/`.
+- 404s are handled by a named `@notfound` location that 302-redirects to `/not-found`, which `not-found.html` handles directly (no redirect loop).
 
-Since there's no build tooling, "develop" = edit files and reload the browser. To preview locally without a server, opening `index.html` directly in a browser works for the home page, but the contact page (`contact/index.html`) also works this way since the asset paths are relative.
+## Contact form
 
-If you want a local server with the correct origin for the contact iframe to behave normally:
+The `/contact` page embeds an external iframe (`https://form.futurestudio.dev/...`). The form itself lives elsewhere (a Formspree-style host); this repo only contains the iframe shell.
 
-```sh
-# any of these work; the contact iframe requires HTTPS to allow clipboard-write
-python3 -m http.server 8000
-# or
-npx serve .
-```
+## Deployment
 
-## URL structure & OpenResty deployment
-
-The site is structured so that URLs never carry a `.html` suffix:
-
-- `/` → served from `index.html` at repo root.
-- `/contact` → served from `contact/index.html`.
-- Anything else → `error_page 404 =302 /not-found;` returns the 404 page (the browser address bar changes to `/not-found`).
-
-The full, ready-to-deploy server block lives in [openresty.conf](openresty.conf) at the repo root — copy its `server { ... }` into your OpenResty config and replace the placeholder `root` path with your real value. SSL is handled by 1Panel upstream, so this block only listens on plain HTTP (port 80). The key pieces it implements:
-
-1. **`try_files $uri $uri/ $uri.html =404;`** — maps clean URLs to the `folder/index.html` layout, with a `.html` fallback for legacy links during a transition window. Drop the `$uri.html` clause once no external `.html` links remain.
-2. **`error_page 404 =302 /not-found;`** — external redirect to the canonical 404 URL. The browser bar changes to `/not-found` (so users see the friendly route, not the bad URL they typed). The `try_files` chain then serves `not-found.html` for `/not-found`.
-
-The OpenResty config is the source of truth for routing; this section is just a map of _why_ each line exists.
-
-## Assets
-
-All images live in `pic/` (one level deep from the contact page, at root for the other two pages):
-
-- `pic/Tree.svg` — logo and favicon (referenced in every page's `<link rel="icon">` and in the navbar/footer brand).
-- `pic/Headshot.jpeg` — hero avatar on the home page only.
-- `pic/waving_hand_animated_medium-light.png` — self-animating APNG used on the contact page title. No CSS animation needed; the file does the work.
-- `pic/knocked-out_face_animated.png` — self-animating APNG used on the 404 page.
-
-Both APNGs are large (~1.4 MB and ~2.8 MB). They load eagerly on each page; if size ever matters, add `loading="lazy"` and/or swap to a smaller format, but do not strip the animation.
+Push to `origin` (GitHub, `futurelyf/future-studio-web`). Deployment to the server is not part of this repo. The `root` path in `openresty.conf` is the on-server deploy location.
