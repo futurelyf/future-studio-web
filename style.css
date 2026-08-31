@@ -403,7 +403,7 @@ body::before {
 .tag {
   position: absolute;
   z-index: 1;
-  padding: 10px 20px 10px 34px;
+  padding: 9px 18px 9px 31px;
   border-radius: 16px;
   font-weight: 700;
   box-shadow: 0 12px 28px var(--shadow);
@@ -418,10 +418,10 @@ body::before {
 .tag::before {
   content: "";
   position: absolute;
-  left: 14px;
+  left: 13px;
   top: 50%;
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: currentColor;
   opacity: 0.7;
@@ -454,7 +454,7 @@ body::before {
 
 /* --- RESPONSIVE TAG POSITIONS --- */
 .tag {
-  font-size: 0.88rem;
+  font-size: 0.8rem;
 }
 .tag--topleft {
   top: 14%;
@@ -476,8 +476,8 @@ body::before {
 }
 @media (min-width: 640px) {
   .tag {
-    font-size: 1.2rem;
-    padding: 11px 22px 11px 36px;
+    font-size: 1.08rem;
+    padding: 10px 20px 10px 33px;
   }
   .tag--topleft {
     top: 22%;
@@ -506,11 +506,11 @@ body::before {
 }
 @media (min-width: 1025px) {
   .tag {
-    font-size: 1.5rem;
-    padding: 12px 24px 12px 40px;
+    font-size: 1.35rem;
+    padding: 11px 22px 11px 36px;
   }
   .tag::before {
-    left: 16px;
+    left: 15px;
   }
   .tag--topleft {
     top: 28%;
@@ -533,7 +533,7 @@ body::before {
 }
 @media (min-width: 1400px) {
   .tag {
-    font-size: 1.6rem;
+    font-size: 1.44rem;
   }
   .tag--topleft {
     top: 30%;
@@ -622,11 +622,19 @@ body::before {
   overflow: hidden;
   animation: rise 0.9s ease 0.25s both;
 }
+.contact__embed {
+  border-radius: calc(var(--radius) - 8px);
+  overflow: hidden;
+  /* Promotes to its own layer so the rounded clip is rasterized with the
+     iframe instead of being dropped on fractional-pixel widths. */
+  transform: translateZ(0);
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  line-height: 0;
+}
 .contact__frame iframe {
   width: 100%;
   height: 80vh;
   border: 0;
-  border-radius: calc(var(--radius) - 8px);
   display: block;
   background: transparent;
 }
