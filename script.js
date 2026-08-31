@@ -37,6 +37,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// ===== Scrollbar width probe (macOS overlays report 0, Windows reserves ~12-17px) =====
+const sbProbe = document.createElement("div");
+sbProbe.style.cssText = "position:absolute;visibility:hidden;overflow:scroll;";
+document.body.appendChild(sbProbe);
+const sbWidth = sbProbe.offsetWidth - sbProbe.clientWidth;
+sbProbe.remove();
+document.documentElement.style.setProperty("--sbw", sbWidth + "px");
+
 // ===== Smooth scroll for in-page anchor links (only href="#...") =====
 document.querySelectorAll('a[href^="#"]').forEach((a) => {
   a.addEventListener("click", (e) => {

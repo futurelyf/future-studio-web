@@ -625,14 +625,13 @@ body::before {
 .contact__embed {
   border-radius: calc(var(--radius) - 8px);
   overflow: hidden;
-  /* Promotes to its own layer so the rounded clip is rasterized with the
-     iframe instead of being dropped on fractional-pixel widths. */
   transform: translateZ(0);
-  -webkit-mask-image: -webkit-radial-gradient(white, black);
   line-height: 0;
 }
 .contact__frame iframe {
-  width: 100%;
+  /* +scrollbar width (--sbw set by script.js) so the iframe's own scrollbar,
+     which takes layout space on Windows, falls outside the rounded clip. */
+  width: calc(100% + var(--sbw, 17px));
   height: 80vh;
   border: 0;
   display: block;
